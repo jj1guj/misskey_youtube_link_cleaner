@@ -10,7 +10,7 @@
     (u.index_of("youtu.be") != -1) || (u.index_of("youtube.com") != -1)  // true/false
 }
 
-@cleanUrl(u) {	
+@cleanUrl(u) {
     if (is_youtube(u)) {
         u.split("?")[0]    // 「?」より前だけ残す
     } else {
@@ -30,6 +30,6 @@ Plugin:register_note_post_interruptor(@(note) {
         parts[i] = cleanUrl(parts[i])
     }
     
-    note.text = parts.join(" ")
+    note.text = parts.join("")
     return note
 })
