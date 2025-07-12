@@ -28,13 +28,8 @@ Plugin:register_note_post_interruptor(@(note) {
 
     for (let i, parts.len) {
         parts[i] = cleanUrl(parts[i])
-        if (out == "") {
-            out = parts[i]
-        } else {
-            out = out + " " + parts[i]
-        }
     }
     
-    note.text = out
+    note.text = parts.join(" ")
     return note
 })
