@@ -10,7 +10,7 @@
     (u.index_of("youtu.be") != -1) || (u.index_of("youtube.com") != -1)  // true/false
 }
 
-@cleanUrl(u) {
+@cleanUrl(u) {	
     if (is_youtube(u)) {
         u.split("?")[0]    // 「?」より前だけ残す
     } else {
@@ -18,8 +18,8 @@
     }
 }
 
-Plugin: register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
-    if(note.text == null) {
+Plugin:register_note_post_interruptor(@(note) {
+    if (note.text == null) {
         return note
     }
 
@@ -29,10 +29,12 @@ Plugin: register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
     for (let i, parts.len) {
         parts[i] = cleanUrl(parts[i])
         if (out == "") {
-            out = `{out}{cleanUrl(parts[i])}`
+            out = parts[i]
         } else {
-            out = `{out} {cleanUrl(parts[i])}`
+            out = out + " " + parts[i]
         }
     }
-    rewrite('text', out)
+    
+    note.text = out
+    return note
 })
