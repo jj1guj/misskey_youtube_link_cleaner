@@ -1,5 +1,5 @@
 # YouTube Link Cleaner
-Misskeyにおいてノート時にYouTubeの追跡リンクを削除するプラグイン
+Misskeyにおいてノート時にYouTubeの追跡クエリを削除するプラグイン
 
 ## インストール方法
 
