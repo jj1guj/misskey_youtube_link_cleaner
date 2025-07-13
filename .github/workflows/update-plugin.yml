@@ -36,7 +36,7 @@ jobs:
         # README:  hash=xxxxxxxx(128)
         sed -Ei "s/hash=[0-9a-f]{128}/hash=${NEW}/" README.md
         # install.html: const HASH = 'xxxxxxxx(128)';
-        sed -Ei "s/const HASH = '[0-9a-f]{128}'/const HASH = '${NEW}'/" install.html
+        sed -zEi "s/const[[:space:]]+HASH[[:space:]]*=[[:space:]]*\\\"[0-9a-f]{128}\\\"/const HASH = \\\"${NEW}\\\"/" install.html
 
     # 5) 変更をコミットして main へプッシュ
     - name: Commit and push
