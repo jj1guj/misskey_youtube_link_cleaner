@@ -12,7 +12,23 @@
 
 @cleanUrl(u) {
     if (is_youtube(u)) {
-        u.split("?")[0]    // 「?」より前だけ残す
+        // クエリ文字列が存在する
+        if (u.split("?").len > 1) {
+            var query_list = u.split("?")[1].split("&")
+            for (let i, query_list.len) {
+                // 追跡クエリを削除
+                if (query_list[i].index_of("si=") != -1) {
+                    query_list[i] = ""
+                }
+            }
+            let query = query_list.join("")
+            if (query != "") {
+                return `{u.split("?")[0]}?{query}`
+            } else {
+                return u.split("?")[0]
+            }
+        }
+        return u
     } else {
         u
     }
