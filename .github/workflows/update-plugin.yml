@@ -1,0 +1,54 @@
+name: build-and-deploy-plugin
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'main.ais'          # プラグイン本体が変わったときだけ起動
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    # ----- GITHUB_TOKEN に書き込み権限を付与 -----
+    permissions:
+      contents: write   # ← これがないと push できません
+
+    steps:
+    # 1) リポジトリをチェックアウト
+    - uses: actions/checkout@v4   # 最新版
+
+    # 2) plugin.json をワンライナーで生成 (jq -R -s)
+    - name: Build plugin.json
+      run: |
+        jq -R -s '{type:"plugin",data:.}' main.ais > plugin.json
+
+    # 3) SHA-512 を計算して後続ステップへ渡す
+    - name: Calculate SHA512
+      id: hash
+      run: |
+        HASH=$(sha512sum main.ais | cut -d' ' -f1)
+        echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+
+    # 4) README と Web 配布ページ (install.html) 中のハッシュを置換
+    - name: Patch hash everywhere
+      run: |
+        NEW=${{ steps.hash.outputs.hash }}
+        # README:  hash=xxxxxxxx(128)
+        sed -Ei "s/hash=[0-9a-f]{128}/hash=${NEW}/" README.md
+        # install.html: const HASH = 'xxxxxxxx(128)';
+        sed -Ei "s/const HASH = '[0-9a-f]{128}'/const HASH = '${NEW}'/" install.html
+
+    # 5) 変更をコミットして main へプッシュ
+    - name: Commit and push
+      uses: stefanzweifel/git-auto-commit-action@v6
+      with:
+        commit_message: "chore: regenerate plugin.json and hash 🤖"
+        push_options: --force-with-lease
+
+    # 6) (任意) GitHub Pages へ公開
+    - name: Deploy to Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: .         # plugin.json と docs/ がリポジトリ直下にある場合
