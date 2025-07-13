@@ -1,7 +1,7 @@
 name: build-and-deploy-plugin
 on:
   push:
-    branches: [5-easy-to-distribute-plugin]
+    branches: [main]
     paths:
       - 'main.ais'          # プラグイン本体が変わったときだけ起動
 
