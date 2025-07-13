@@ -1,0 +1,55 @@
+/// @ 0.12.4
+### {
+    name: "YouTube Link Cleaner"
+    version: "0.1.0"
+    author: "@jj1guj"
+    description: "投稿時に YouTube URL の追跡クエリ (?si など) を削除します"
+}
+
+@is_youtube(u) {
+    (u.index_of("youtu.be") != -1) || (u.index_of("youtube.com") != -1)  // true/false
+}
+
+@cleanUrl(u) {
+    if (is_youtube(u)) {
+        // クエリ文字列が存在する
+        if (u.split("?").len > 1) {
+            var query_list = u.split("?")[1].split("&")
+            for (let i, query_list.len) {
+                // 追跡クエリを削除
+                if (query_list[i].index_of("si=") != -1) {
+                    query_list[i] = ""
+                }
+            }
+            let query = query_list.join("")
+            if (query != "") {
+                return `{u.split("?")[0]}?{query}`
+            } else {
+                return u.split("?")[0]
+            }
+        }
+        return u
+    } else {
+        u
+    }
+}
+
+// test
+Plugin:register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
+    if (note.text == null) {
+        return note
+    }
+
+    let parts = note.text.split(" ")
+    var out = ""
+
+    for (let i, parts.len) {
+        parts[i] = cleanUrl(parts[i])
+        if (out == "") {
+            out = `{out}{cleanUrl(parts[i])}`
+        } else {
+            out = `{out} {cleanUrl(parts[i])}`
+        }
+    }
+    rewrite('text', out)
+})
