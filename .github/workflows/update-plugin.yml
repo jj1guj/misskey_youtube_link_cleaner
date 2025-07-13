@@ -32,9 +32,11 @@ jobs:
     # 4) README と Web 配布ページ (install.html) 中のハッシュを置換
     - name: Patch hash everywhere
       run: |
-        for f in README.md install.html; do
-          sed -Ei "s/hash=[0-9a-f]{128}/hash=${{ steps.hash.outputs.hash }}/" "$f"
-        done
+        NEW=${{ steps.hash.outputs.hash }}
+        # README:  hash=xxxxxxxx(128)
+        sed -Ei "s/hash=[0-9a-f]{128}/hash=${NEW}/" README.md
+        # install.html: const HASH = 'xxxxxxxx(128)';
+        sed -Ei "s/const HASH = '[0-9a-f]{128}'/const HASH = '${NEW}'/" install.html
 
     # 5) 変更をコミットして main へプッシュ
     - name: Commit and push
