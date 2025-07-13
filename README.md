@@ -3,7 +3,10 @@ Misskeyにおいてノート時にYouTubeの追跡クエリを削除するプラ
 
 ## インストール方法
 
-main.aisをコピーし「設定」->「プラグイン」->「プラグインのインストール」に貼り付けてください
+こちらからインストールしてください
+[![Install on Misskey](https://img.shields.io/badge/Misskey-%E2%98%86%20Install-blue)](
+  https://jj1guj.github.io/misskey_youtube_link_cleaner/install.html
+)
 
 ## 使い方
 
