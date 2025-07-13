@@ -34,8 +34,8 @@
     }
 }
 
-Plugin: register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
-    if(note.text == null) {
+Plugin:register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
+    if (note.text == null) {
         return note
     }
 
