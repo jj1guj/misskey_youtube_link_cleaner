@@ -142,7 +142,7 @@
             インストールを開始
         </button>
 
-        <footer>v0.1.0 · Hash <code>4afa0...e5bb8c</code></footer>
+        <footer>v0.1.0 · Hash <code id="hashShort"></code></footer>
     </main>
 
     <script type="module">
@@ -150,6 +150,9 @@
             "https://raw.githubusercontent.com/jj1guj/misskey_youtube_link_cleaner/refs/heads/main/plugin.json"
         );
         const HASH = "4afa09918cdb8fe4683d771d330995b87904e385187246a1adeb2f5331ace75fc5c0ff35f5f3f64819b991c1f503167800ea87214c8c403a4be434afe6e5bb8c";
+
+        // 表示用に短縮したハッシュをフッターへ
+        document.getElementById("hashShort").textContent = `${HASH.slice(0, 5)}...${HASH.slice(-6)}`;
 
         const hostInput = document.getElementById("host");
         const btn = document.getElementById("installBtn");
