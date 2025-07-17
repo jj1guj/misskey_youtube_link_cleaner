@@ -1,29 +1,195 @@
 <!DOCTYPE html>
 <html lang="ja">
-<meta charset="utf-8">
-<title>Install on Misskey</title>
-<style>
-    body {
-        font-family: sans-serif;
-        text-align: center;
-        margin-top: 4rem
-    }
 
-    button {
-        font-size: 1.1rem;
-        padding: .6rem 1.4rem
-    }
-</style>
-<script type="module">
-    const API = encodeURIComponent('https://raw.githubusercontent.com/jj1guj/misskey_youtube_link_cleaner/refs/heads/5-easy-to-distribute-plugin/plugin.json');
-    const HASH = '4afa09918cdb8fe4683d771d330995b87904e385187246a1adeb2f5331ace75fc5c0ff35f5f3f64819b991c1f503167800ea87214c8c403a4be434afe6e5bb8c';
-    document.getElementById('btn').onclick = () => {
-        const host = prompt('インストール先インスタンスのホスト名を入力してください');
-        if (!host) return;
-        location.href =
-            `https://${host}/install-extensions?url=${API}&hash=${HASH}`;
-    };
-</script>
-<button id="btn">Misskey にインストール</button>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YouTube Link Cleaner – Install</title>
+    <!-- Google Font: Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            /* Misskey brand palette */
+            --accent: #86b300;
+            /* Misskey theme‑color */
+            --accent-hover: #79a000;
+            /* Slightly darker for hover */
+            --bg: #f6f8fa;
+            --text: #222;
+            --radius: 0.75rem;
+        }
+
+        /* Dark theme (Misskey default dark palette) */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #313a42;
+                /* Misskey manifest background_color */
+                --text: #e6edf3;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: "Noto Sans JP", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 1rem;
+        }
+
+        main {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin: 0 0 1.5rem;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-hover);
+        }
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.8rem 1.4rem;
+            color: #fff;
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        footer {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            opacity: 0.75;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>YouTube Link Cleaner<br />をインストール</h1>
+        <p>
+            Misskeyインスタンスのホスト名を入力して<br />インストールを開始しましょう。
+        </p>
+
+        <label for="host">ホスト名 (例: <code>example.social</code>)</label>
+        <input id="host" type="text" placeholder="example.social" autocomplete="off" />
+
+        <button id="installBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+            </svg>
+            インストールを開始
+        </button>
+
+        <footer><code id="version"></code> · Hash <code id="hashShort"></code></footer>
+    </main>
+
+    <script type="module">
+        const API_URL = "https://raw.githubusercontent.com/jj1guj/misskey_youtube_link_cleaner/refs/heads/main/plugin.json";
+        const API = encodeURIComponent(
+            API_URL
+        );
+
+        // バージョン情報を取得
+        try {
+            const response = await fetch(API_URL);
+            const pluginData = await response.json();
+
+            // dataフィールドからバージョンを抽出
+            const dataString = pluginData.data;
+            const versionMatch = dataString.match(/version:\s*"([^"]+)"/);
+            const version = versionMatch ? `v${versionMatch[1]}` : "unknown";
+
+            document.getElementById("version").textContent = version;
+        } catch (error) {
+            console.error("バージョン取得エラー:", error);
+            // フォールバック表示
+            document.getElementById("version").textContent = "unknown";
+        }
+
+        const HASH = "787ea64f92d620bd88e3db50d2faba441ef3c15b3f6942e28e5e9fd7166ce84402aa3c0a39e968f0b929ec9e1af261730a9446bc54fb00c0052dfaab71073464";
+
+        // 表示用に短縮したハッシュをフッターへ
+        document.getElementById("hashShort").textContent = `${HASH.slice(0, 5)}...${HASH.slice(-6)}`;
+
+        const hostInput = document.getElementById("host");
+        const btn = document.getElementById("installBtn");
+
+        // Allow Enter key to trigger install for accessibility
+        hostInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") btn.click();
+        });
+
+        btn.addEventListener("click", () => {
+            const host = hostInput.value.trim();
+            if (!host) {
+                hostInput.focus();
+                return;
+            }
+            window.location.href = `https://${host}/install-extensions?url=${API}&hash=${HASH}`;
+        });
+    </script>
+</body>
 
 </html>

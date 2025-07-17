@@ -1,7 +1,7 @@
 /// @ 0.12.4
 ### {
     name: "YouTube Link Cleaner"
-    version: "0.1.0"
+    version: "0.1.1"
     author: "@jj1guj"
     description: "投稿時に YouTube URL の追跡クエリ (?si など) を削除します"
 }
@@ -39,16 +39,17 @@ Plugin:register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
         return note
     }
 
-    let parts = note.text.split(" ")
-    var out = ""
+    // 正規表現を使えないようなので以下の手順で追跡クエリの削除を行う
+    // 1. 空白を改行で置換して改行でsplitした配列を用意する
+    // 2. 用意した各要素について`cleanUrl`を実行
+    // 3. 元の文字列において該当箇所を`cleanUrl`の実行結果で置換する
+    let input_text = note.text
+    let normalized = input_text.replace(' ', Str:lf).replace('　', Str:lf)
+    let parts = normalized.split(Str:lf)
+    var out = input_text
 
-    for (let i, parts.len) {
-        parts[i] = cleanUrl(parts[i])
-        if (out == "") {
-            out = `{out}{cleanUrl(parts[i])}`
-        } else {
-            out = `{out} {cleanUrl(parts[i])}`
-        }
+    each (let part, parts) {
+        out = out.replace(part, cleanUrl(part))
     }
     rewrite('text', out)
 })
