@@ -46,10 +46,10 @@ Plugin:register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
     let input_text = note.text
     let normalized = input_text.replace(' ', Str:lf).replace('　', Str:lf)
     let parts = normalized.split(Str:lf)
-    var out = input_text
+    var out_text = input_text
 
     each (let part, parts) {
-        out = out.replace(part, cleanUrl(part))
+        out_text = out_text.replace(part, cleanUrl(part))
     }
-    rewrite('text', out)
+    rewrite('text', out_text)
 })
