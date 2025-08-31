@@ -1,7 +1,7 @@
 /// @ 0.12.4
 ### {
     name: "YouTube Link Cleaner"
-    version: "0.1.1"
+    version: "0.1.2"
     author: "@jj1guj"
     description: "投稿時に YouTube URL の追跡クエリ (?si など) を削除します"
 }
