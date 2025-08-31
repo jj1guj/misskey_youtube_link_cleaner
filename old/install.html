@@ -125,10 +125,9 @@
 
 <body>
     <main>
-        <h1>YouTube Link Cleaner<br />をインストール</h1>
+        <h1>YouTube Link Cleaner<br />(2025.7.0までバージョン)<br />をインストール</h1>
         <p>
-            Misskeyインスタンスのホスト名を入力して<br />インストールを開始しましょう。<br />
-            2025.7.0以前の場合は<a href="old/install.html">こちら</a>をお使いください。
+            Misskeyインスタンスのホスト名を入力して<br />インストールを開始しましょう。
         </p>
 
         <label for="host">ホスト名 (例: <code>example.social</code>)</label>
@@ -147,7 +146,7 @@
     </main>
 
     <script type="module">
-        const API_URL = "https://raw.githubusercontent.com/jj1guj/misskey_youtube_link_cleaner/refs/heads/main/plugin.json";
+        const API_URL = "https://raw.githubusercontent.com/jj1guj/misskey_youtube_link_cleaner/refs/heads/main/old/plugin.json";
         const API = encodeURIComponent(
             API_URL
         );
@@ -169,7 +168,7 @@
             document.getElementById("version").textContent = "unknown";
         }
 
-        const HASH = "2a33fa3ae9f693591f42f821d62a642f7ece4359569c8228e833ffc7ca2ced326fd9bf3200937c4d2f3f586e22252ac2024439bb30fb155b9fad2fbc76a26954";
+        const HASH = "787ea64f92d620bd88e3db50d2faba441ef3c15b3f6942e28e5e9fd7166ce84402aa3c0a39e968f0b929ec9e1af261730a9446bc54fb00c0052dfaab71073464";
 
         // 表示用に短縮したハッシュをフッターへ
         document.getElementById("hashShort").textContent = `${HASH.slice(0, 5)}...${HASH.slice(-6)}`;

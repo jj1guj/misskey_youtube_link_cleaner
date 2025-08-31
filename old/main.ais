@@ -1,7 +1,7 @@
 /// @ 0.12.4
 ### {
     name: "YouTube Link Cleaner"
-    version: "0.1.2"
+    version: "0.1.1"
     author: "@jj1guj"
     description: "投稿時に YouTube URL の追跡クエリ (?si など) を削除します"
 }
@@ -46,10 +46,10 @@ Plugin:register_post_form_action('YouTube Link Cleaner', @(note, rewrite) {
     let input_text = note.text
     let normalized = input_text.replace(' ', Str:lf).replace('　', Str:lf)
     let parts = normalized.split(Str:lf)
-    var out_text = input_text
+    var out = input_text
 
     each (let part, parts) {
-        out_text = out_text.replace(part, cleanUrl(part))
+        out = out.replace(part, cleanUrl(part))
     }
-    rewrite('text', out_text)
+    rewrite('text', out)
 })
